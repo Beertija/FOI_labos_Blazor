@@ -38,7 +38,7 @@ namespace FOI_labos_Blazor.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Todos");
+                    b.ToTable("Todos", (string)null);
                 });
 #pragma warning restore 612, 618
         }

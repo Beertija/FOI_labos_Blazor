@@ -1,4 +1,4 @@
-﻿using FOI_labos_Blazor.Models;
+﻿using FOI_labos_Blazor.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FOI_labos_Blazor.Data;
