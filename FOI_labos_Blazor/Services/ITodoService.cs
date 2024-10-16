@@ -4,13 +4,13 @@ namespace FOI_labos_Blazor.Services;
 
 public interface ITodoService
 {
-    List<Todo> GetTodos();
+    Task<List<Todo>> GetAllAsync();
 
-    Todo GetById(Guid id);
+    Task<Todo> GetByIdAsync(Guid id);
 
-    void Create(Todo model);
+    Task CreateAsync(Todo model);
 
-    void Update(Todo model);
+    Task UpdateAsync(Todo model);
 
-    void Delete(Guid id);
+    Task DeleteAsync(Guid id);
 }
