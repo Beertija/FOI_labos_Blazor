@@ -1,36 +1,37 @@
 ﻿using FOI_labos_Blazor.Data;
 using FOI_labos_Blazor.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FOI_labos_Blazor.Services;
 
 public class TodoService(ApplicationDbContext context) : ITodoService
 {
-    public List<Todo> GetTodos()
+    public Task<List<Todo>> GetAllAsync()
     {
-        return context.Todos.ToList();
+        return context.Todos.ToListAsync();
     }
 
-    public Todo GetById(Guid id)
+    public async Task<Todo> GetByIdAsync(Guid id)
     {
-        return context.Todos.FirstOrDefault(todo => todo.Id == id);
+        return await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id);
     }
 
-    public void Create(Todo model)
+    public async Task CreateAsync(Todo model)
     {
         context.Todos.Add(model);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void Update(Todo model)
+    public async Task UpdateAsync(Todo model)
     {
         context.Todos.Update(model);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void Delete(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        var entity = context.Todos.FirstOrDefault(t => t.Id == id);
-        context.Todos.Remove(entity);
-        context.SaveChanges();
+        var entity = await context.Todos.FirstOrDefaultAsync(t => t.Id == id);
+        context.Todos.Remove(entity!);
+        await context.SaveChangesAsync();
     }
 }

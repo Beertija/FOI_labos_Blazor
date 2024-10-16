@@ -9,32 +9,32 @@ namespace FOI_labos_Blazor.Controllers;
 public class TodoController(ITodoService service) : ControllerBase
 {
     [HttpGet]
-    public IEnumerable<Todo> Get()
+    public async Task<List<Todo>> GetAllAsync()
     {
-        return service.GetTodos();
+        return await service.GetAllAsync();
     }
 
     [HttpGet("{id}")]
-    public Todo Get(Guid id)
+    public async Task<Todo> GetByIdAsync(Guid id)
     {
-        return service.GetById(id);
+        return await service.GetByIdAsync(id);
     }
 
     [HttpPost]
-    public void Post([FromBody] Todo value)
+    public async Task CreateAsync([FromBody] Todo value)
     {
-        service.Create(value);
+        await service.CreateAsync(value);
     }
 
     [HttpPut]
-    public void Put([FromBody] Todo value)
+    public async Task UpdateAsync([FromBody] Todo value)
     {
-        service.Update(value);
+        await service.UpdateAsync(value);
     }
 
     [HttpDelete("{id}")]
-    public void Delete(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        service.Delete(id);
+        await service.DeleteAsync(id);
     }
 }
