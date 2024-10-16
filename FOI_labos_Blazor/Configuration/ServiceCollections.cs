@@ -1,4 +1,5 @@
 ﻿using FOI_labos_Blazor.Data;
+using FOI_labos_Blazor.Services;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
@@ -18,6 +19,15 @@ public static class ServiceCollections
 
         services.AddControllers();
         services.AddSwaggerGen();
+
+        services.RegisterDomainServices();
+
+        return services;
+    }
+
+    public static IServiceCollection RegisterDomainServices(this IServiceCollection services)
+    {
+        services.AddScoped<ITodoService, TodoService>();
 
         return services;
     }
