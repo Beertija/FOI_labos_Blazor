@@ -13,6 +13,8 @@ public static class WebApplicationExstensions
         if (app.Environment.IsDevelopment())
         {
             app.UseWebAssemblyDebugging();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
         else
         {
@@ -22,9 +24,10 @@ public static class WebApplicationExstensions
         }
 
         app.UseHttpsRedirection();
-
         app.UseStaticFiles();
+        app.UseRouting();
         app.UseAntiforgery();
+        app.MapControllers();
 
         app.MapRazorComponents<App>()
             .AddInteractiveWebAssemblyRenderMode()

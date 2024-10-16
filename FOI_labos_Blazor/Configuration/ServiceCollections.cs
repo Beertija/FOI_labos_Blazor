@@ -16,6 +16,9 @@ public static class ServiceCollections
         services.AddRazorComponents()
             .AddInteractiveWebAssemblyComponents();
 
+        services.AddControllers();
+        services.AddSwaggerGen();
+
         return services;
     }
 }
