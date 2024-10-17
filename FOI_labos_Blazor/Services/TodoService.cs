@@ -1,30 +1,36 @@
-﻿using FOI_labos_Blazor.Data;
+﻿using AutoMapper;
+using FOI_labos_Blazor.Data;
 using FOI_labos_Blazor.Data.Models;
+using FOI_labos_Blazor.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace FOI_labos_Blazor.Services;
 
-public class TodoService(ApplicationDbContext context) : ITodoService
+public class TodoService(ApplicationDbContext context, IMapper mapper) : ITodoService
 {
-    public Task<List<Todo>> GetAllAsync()
+    public async Task<List<TodoDto>> GetAllAsync()
     {
-        return context.Todos.ToListAsync();
+        var result = await context.Todos.ToListAsync();
+        return mapper.Map<List<TodoDto>>(result);
     }
 
-    public async Task<Todo> GetByIdAsync(Guid id)
+    public async Task<TodoDto> GetByIdAsync(Guid id)
     {
-        return await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id);
+        var result = await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id);
+        return mapper.Map<TodoDto>(result);
     }
 
-    public async Task CreateAsync(Todo model)
+    public async Task CreateAsync(TodoDto model)
     {
-        context.Todos.Add(model);
+        var entity = mapper.Map<Todo>(model);
+        context.Todos.Add(entity);
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(Todo model)
+    public async Task UpdateAsync(TodoDto model)
     {
-        context.Todos.Update(model);
+        var entity = mapper.Map<Todo>(model);
+        context.Todos.Update(entity);
         await context.SaveChangesAsync();
     }
 
