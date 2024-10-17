@@ -1,16 +1,16 @@
-﻿using FOI_labos_Blazor.Data.Models;
+﻿using FOI_labos_Blazor.Shared;
 
 namespace FOI_labos_Blazor.Services;
 
 public interface ITodoService
 {
-    Task<List<Todo>> GetAllAsync();
+    Task<List<TodoDto>> GetAllAsync();
 
-    Task<Todo> GetByIdAsync(Guid id);
+    Task<TodoDto> GetByIdAsync(Guid id);
 
-    Task CreateAsync(Todo model);
+    Task CreateAsync(TodoDto model);
 
-    Task UpdateAsync(Todo model);
+    Task UpdateAsync(TodoDto model);
 
     Task DeleteAsync(Guid id);
 }

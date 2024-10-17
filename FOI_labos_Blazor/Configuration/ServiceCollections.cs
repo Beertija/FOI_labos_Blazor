@@ -1,5 +1,7 @@
-﻿using FOI_labos_Blazor.Data;
+﻿using System.Reflection;
+using FOI_labos_Blazor.Data;
 using FOI_labos_Blazor.Services;
+using FOI_labos_Blazor.Shared;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
@@ -19,6 +21,8 @@ public static class ServiceCollections
 
         services.AddControllers();
         services.AddSwaggerGen();
+
+        services.AddAutoMapper(typeof(AutoMapperProfile).GetTypeInfo().Assembly);
 
         services.RegisterDomainServices();
 
