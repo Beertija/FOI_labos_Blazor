@@ -1,0 +1,70 @@
+﻿@page "/todo-pregled"
+
+<MudContainer MaxWidth="MaxWidth.Large"
+              Class="mb-2">
+    <MudItem xs="12">
+        <MudStack Spacing="0">
+            <MudStack Row="true">
+                <MudIcon Icon="@Icons.Material.Outlined.WorkOutline"
+                         Size="Size.Large" />
+                <MudText Typo="Typo.h5">Pregled zadataka</MudText>
+            </MudStack>
+            <MudItem>
+                <MudText Typo="Typo.body1">Ovdje se nalazi moj popis zadataka za ovaj tjedan</MudText>
+            </MudItem>
+        </MudStack>
+    </MudItem>
+
+    <MudItem Class="mt-2">
+        <MudPaper Elevation="1"
+                  Class="pa-4">
+            <MudGrid Spacing="2">
+                <MudItem xs="12"
+                         sm="6"
+                         md="6"
+                         lg="2">
+                    <MudTextField T="string"
+                                  Label="Tražilica"
+                                  Variant="Variant.Filled"
+                                  FullWidth="true"
+                                  @bind-Value="_searchTerm"
+                                  Margin="Margin.Dense" />
+                </MudItem>
+
+                <MudItem Class="justify-center align-center mt-2">
+                    <MudButton Variant="Variant.Filled"
+                               StartIcon="@Icons.Material.Filled.Search"
+                               Color="Color.Secondary"
+                               FullWidth="true"
+                               OnClick="SearchAsync">
+                        Traži
+                    </MudButton>
+                </MudItem>
+                <MudItem Class="justify-center align-center mt-2">
+                    <MudButton Variant="Variant.Outlined"
+                               StartIcon="@Icons.Material.Filled.Replay"
+                               Color="Color.Secondary"
+                               FullWidth="true"
+                               OnClick="ClearAsync">
+                        Očisti
+                    </MudButton>
+                </MudItem>
+                
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudContainer>
+
+@code {
+    private string _searchTerm = string.Empty;
+
+    private async Task SearchAsync()
+    {
+
+    }
+
+    private async Task ClearAsync()
+    {
+        _searchTerm = null;
+    }
+}

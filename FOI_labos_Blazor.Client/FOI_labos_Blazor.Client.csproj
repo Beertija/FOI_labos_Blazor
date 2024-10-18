@@ -13,4 +13,8 @@
     <PackageReference Include="MudBlazor" Version="7.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FOI_labos_Blazor.Shared\FOI_labos_Blazor.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
