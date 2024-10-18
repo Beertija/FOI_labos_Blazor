@@ -1,4 +1,5 @@
 ﻿@page "/todo-pregled"
+@using FOI_labos_Blazor.Shared
 
 <MudContainer MaxWidth="MaxWidth.Large"
               Class="mb-2">
@@ -36,7 +37,7 @@
                                StartIcon="@Icons.Material.Filled.Search"
                                Color="Color.Secondary"
                                FullWidth="true"
-                               OnClick="SearchAsync">
+                               OnClick="Search">
                         Traži
                     </MudButton>
                 </MudItem>
@@ -45,11 +46,70 @@
                                StartIcon="@Icons.Material.Filled.Replay"
                                Color="Color.Secondary"
                                FullWidth="true"
-                               OnClick="ClearAsync">
+                               OnClick="Clear">
                         Očisti
                     </MudButton>
                 </MudItem>
                 
+                <MudItem xs="12">
+                    <MudTable T="TodoDto"
+                              Hover="true"
+                              Dense="true"
+                              Elevation="0"
+                              Striped="true"
+                              Items="todosPreview">
+                        <ColGroup>
+                            <col style="width: 40%" />
+                            <col style="width: 40%" />
+                            <col style="width: 20%;" />
+                        </ColGroup>
+                        <HeaderContent>
+                            <MudTh>
+                                <MudTableSortLabel SortLabel="@nameof(TodoDto.Title)"
+                                                   T="TodoDto">
+                                    Naziv
+                                </MudTableSortLabel>
+                            </MudTh>
+                            <MudTh>Gotovo</MudTh>
+                            <MudTh>Akcije</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Naziv">@context.Title</MudTd>
+                            <MudTd DataLabel="Gotovo">
+                                <MudIcon Color="@(context.IsCompleted ? Color.Success : Color.Error)"
+                                         Icon="@(Icons.Material.Outlined.RadioButtonChecked)" />
+                            </MudTd>
+                            <MudTd DataLabel="Akcije">
+                                <MudMenu Dense="true">
+                                    <ActivatorContent>
+                                        <MudIconButton Icon="@Icons.Material.Filled.MoreVert"
+                                                       Size="Size.Small"
+                                                       Color="Color.Primary" />
+                                    </ActivatorContent>
+                                    <ChildContent>
+                                        <MudMenuItem Icon="@Icons.Material.Filled.Edit"
+                                                     OnClick="() => Edit(context)">
+                                            Uredi
+                                        </MudMenuItem>
+                                        <MudMenuItem Icon="@Icons.Material.Filled.Delete"
+                                                     OnClick="() => Delete(context)">
+                                            Obriši
+                                        </MudMenuItem>
+                                    </ChildContent>
+                                </MudMenu>
+                            </MudTd>
+                        </RowTemplate>
+                        <NoRecordsContent>
+                            <MudText>Nema podataka</MudText>
+                        </NoRecordsContent>
+                        <LoadingContent>
+                            <MudText>Učitavanje u tijeku...</MudText>
+                        </LoadingContent>
+                        <PagerContent>
+                            <MudTablePager />
+                        </PagerContent>
+                    </MudTable>
+                </MudItem>
             </MudGrid>
         </MudPaper>
     </MudItem>
@@ -57,14 +117,54 @@
 
 @code {
     private string _searchTerm = string.Empty;
+    private List<TodoDto> todosList = [];
+    private List<TodoDto> todosPreview = [];
 
-    private async Task SearchAsync()
+    protected override void OnInitialized()
     {
-
+        todosList.AddRange(new List<TodoDto>
+        {
+            new() { Id = Guid.NewGuid(), Title = "Zadaća", IsCompleted = false },
+            new() { Id = Guid.NewGuid(), Title = "Pranje suđa", IsCompleted = true },
+            new() { Id = Guid.NewGuid(), Title = "Obrana projekta", IsCompleted = false }
+        });
+        todosPreview.AddRange(todosList);
     }
 
-    private async Task ClearAsync()
+    private void Search()
+    {
+        todosPreview = todosList.Where(todo => todo.Title.Contains(_searchTerm)).ToList();
+    }
+
+    private void Clear()
     {
         _searchTerm = null;
+        todosPreview.Clear();
+        todosPreview.AddRange(todosList);
+    }
+
+    private void Edit(TodoDto model)
+    {
+        var index = todosList.FindIndex(todo => todo.Id == model.Id);
+        if (index != -1)
+        {
+            todosList[index] = model;
+        }
+
+        var previewIndex = todosPreview.FindIndex(todo => todo.Id == model.Id);
+        if (previewIndex != -1)
+        {
+            todosPreview[previewIndex] = model;
+        }
+    }
+
+
+    private void Delete(TodoDto model)
+    {
+        todosList.Remove(model);
+        if (todosPreview.Contains(model))
+        {
+            todosPreview.Remove(model);
+        }
     }
 }
