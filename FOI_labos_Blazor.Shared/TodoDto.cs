@@ -1,8 +1,8 @@
 ﻿namespace FOI_labos_Blazor.Shared;
 
-public record TodoDto
+public class TodoDto
 {
-    public Guid Id { get; init; }
-    public string Title { get; init; }
-    public bool IsCompleted { get; init; }
+    public Guid Id { get; set; }
+    public string Title { get; set; }
+    public bool IsCompleted { get; set; } = false;
 }

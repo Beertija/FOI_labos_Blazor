@@ -16,10 +16,13 @@ public static class ServiceCollections
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+        services.AddControllers();
         services.AddRazorComponents()
             .AddInteractiveWebAssemblyComponents();
-
-        services.AddControllers();
+        services.AddRazorPages();
+        services.AddEndpointsApiExplorer();
+        services.AddRouting();
+        
         services.AddSwaggerGen();
 
         services.AddAutoMapper(typeof(AutoMapperProfile).GetTypeInfo().Assembly);

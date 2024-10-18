@@ -1,0 +1,111 @@
+﻿@page "/todo-forma/{Id:guid?}"
+
+@using FOI_labos_Blazor.Client.HttpServices
+@using FOI_labos_Blazor.Shared
+
+@inject NavigationManager Navigation
+@inject ITodoService TodoService
+
+<MudContainer MaxWidth="MaxWidth.Small"
+              Class="mb-2">
+    <MudItem xs="12">
+        <MudStack Spacing="0">
+            <MudStack Row="true">
+                <MudIcon Icon="@Icons.Material.Outlined.WorkOutline"
+                         Size="Size.Large" />
+                <MudText Typo="Typo.h5">Detalji zadatka</MudText>
+            </MudStack>
+            <MudItem>
+                <MudText Typo="Typo.body1">Ova forma služi za editiranje ili unos zadataka</MudText>
+            </MudItem>
+        </MudStack>
+    </MudItem>
+
+    <MudItem Class="my-2">
+        <MudStack>
+            <MudPaper Class="pa-6"
+                      Elevation="1">
+                <MudForm Model="@Input">
+                    <MudGrid>
+                        <MudItem xs="12"
+                                 sm="10"
+                                 md="8"
+                                 lg="12">
+                            <MudTextField T="string"
+                                          Label="Naziv"
+                                          @bind-Value="Input.Title"
+                                          Variant="Variant.Filled"
+                                          Margin="Margin.Dense"
+                                          Required="true" />
+                        </MudItem>
+                        @if (!IsCreate)
+                        {
+                            <MudItem xs="12"
+                                     sm="10"
+                                     md="8"
+                                     lg="12">
+                                <MudSwitch T="bool"
+                                           Color="Color.Primary"
+                                           UncheckedColor="Color.Warning"
+                                           @bind-Value="Input.IsCompleted">
+                                    Obavljeno
+                                </MudSwitch>
+                            </MudItem>
+                        }
+                        <MudItem xs="12"
+                                 Class="d-flex justify-end">
+                            <MudButton OnClick="SubmitAsync"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       Size="Size.Medium"
+                                       Class="mr-2">
+                                @(IsCreate ? "Dodaj" : "Spremi")
+                            </MudButton>
+                            <MudButton OnClick="Cancel"
+                                       Variant="Variant.Outlined"
+                                       Color="Color.Primary"
+                                       Size="Size.Medium">
+                                Odustani
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudForm>
+            </MudPaper>
+        </MudStack>
+    </MudItem>
+</MudContainer>
+
+@code {
+    private TodoDto Input { get; set; } = new();
+    private bool IsCreate => Id is null;
+
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!IsCreate)
+        {
+            Input = await TodoService.GetByIdAsync(Id!.Value);
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (IsCreate)
+        {
+            await TodoService.CreateAsync(Input);
+        }
+        else
+        {
+            await TodoService.UpdateAsync(Input);
+        }
+        
+        Navigation.NavigateTo("/todo-pregled");
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/todo-pregled");
+    }
+}

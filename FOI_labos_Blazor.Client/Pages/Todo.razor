@@ -3,6 +3,7 @@
 @using FOI_labos_Blazor.Client.HttpServices
 @using FOI_labos_Blazor.Shared
 
+@inject NavigationManager Navigation
 @inject ITodoService TodoService
 
 <MudContainer MaxWidth="MaxWidth.Large"
@@ -55,6 +56,16 @@
                     </MudButton>
                 </MudItem>
                 
+                <MudItem Class="justify-center align-center mt-2">
+                    <MudButton Variant="Variant.Filled"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               Color="Color.Secondary"
+                               FullWidth="true"
+                               OnClick="Add">
+                        Dodaj
+                    </MudButton>
+                </MudItem>
+                
                 <MudItem xs="12">
                     <MudTable T="TodoDto"
                               Hover="true"
@@ -92,11 +103,11 @@
                                     </ActivatorContent>
                                     <ChildContent>
                                         <MudMenuItem Icon="@Icons.Material.Filled.Edit"
-                                                     OnClick="() => Edit(context)">
+                                                     OnClick="() => Edit(context.Id)">
                                             Uredi
                                         </MudMenuItem>
                                         <MudMenuItem Icon="@Icons.Material.Filled.Delete"
-                                                     OnClick="() => Delete(context)">
+                                                     OnClick="() => DeleteAsync(context)">
                                             Obriši
                                         </MudMenuItem>
                                     </ChildContent>
@@ -142,28 +153,21 @@
         todosPreview.AddRange(todosList);
     }
 
-    private void Edit(TodoDto model)
+    private void Add()
     {
-        var index = todosList.FindIndex(todo => todo.Id == model.Id);
-        if (index != -1)
-        {
-            todosList[index] = model;
-        }
-
-        var previewIndex = todosPreview.FindIndex(todo => todo.Id == model.Id);
-        if (previewIndex != -1)
-        {
-            todosPreview[previewIndex] = model;
-        }
+        Navigation.NavigateTo($"/todo-forma");
     }
 
-
-    private void Delete(TodoDto model)
+    private void Edit(Guid id)
     {
-        todosList.Remove(model);
-        if (todosPreview.Contains(model))
-        {
-            todosPreview.Remove(model);
-        }
+        Navigation.NavigateTo($"/todo-forma/{id}");
+    }
+
+    private async Task DeleteAsync(TodoDto model)
+    {
+        await TodoService.DeleteAsync(model.Id);
+        todosList = await TodoService.GetAllAsync();
+        todosPreview.Clear();
+        todosPreview.AddRange(todosList);
     }
 }
